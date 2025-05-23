@@ -1,0 +1,157 @@
+ <!DOCTYPE html><html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Crypto High/Low Tracker</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }body {
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+}
+
+.container {
+  background: #ffffff10;
+  backdrop-filter: blur(10px);
+  border-radius: 20px;
+  padding: 30px;
+  max-width: 400px;
+  width: 100%;
+  color: #fff;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  text-align: center;
+  animation: slideIn 1s ease-in-out;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateY(-50px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+h1 {
+  margin-bottom: 20px;
+  font-size: 1.8em;
+}
+
+input, button {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  font-size: 1em;
+  margin: 5px 0;
+  width: 100%;
+  transition: all 0.3s ease;
+}
+
+input {
+  background: #ffffff15;
+  color: #fff;
+}
+
+input::placeholder {
+  color: #ccc;
+}
+
+button {
+  background: #4ade80;
+  color: #000;
+  cursor: pointer;
+}
+
+button:hover {
+  background: #22c55e;
+}
+
+.result {
+  margin-top: 20px;
+  text-align: left;
+  background: #00000030;
+  padding: 15px;
+  border-radius: 12px;
+  animation: fadeIn 0.8s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.result p {
+  margin: 8px 0;
+}
+
+@media (max-width: 480px) {
+  h1 {
+    font-size: 1.5em;
+  }
+}
+
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Crypto High/Low Tracker</h1>
+    <input type="text" id="cryptoInput" placeholder="Enter crypto symbol (e.g. BTC)" />
+    <button onclick="fetchCryptoData()">Get Info</button>
+    <div id="output" class="result"></div>
+  </div>
+  <script>
+  async function fetchCryptoData() {
+    const symbol = document.getElementById('cryptoInput').value.trim().toLowerCase();
+    const output = document.getElementById('output');
+    if (!symbol) {
+      output.innerHTML = '<p>Please enter a cryptocurrency symbol.</p>';
+      return;
+    }
+
+    output.innerHTML = '<p>Loading...</p>';
+
+    try {
+      // Step 1: Get all coins list
+      const listResponse = await fetch('https://api.coingecko.com/api/v3/coins/list');
+      const coins = await listResponse.json();
+
+      // Step 2: Find the coin by symbol
+      const coin = coins.find(c => c.symbol === symbol);
+
+      if (!coin) throw new Error('Symbol not found.');
+
+      // Step 3: Fetch data using the coin ID
+      const dataResponse = await fetch(`https://api.coingecko.com/api/v3/coins/${coin.id}`);
+      const data = await dataResponse.json();
+
+      const ath = data.market_data.ath.usd;
+      const atl = data.market_data.atl.usd;
+
+      output.innerHTML = `
+        <p><strong>Name:</strong> ${data.name}</p>
+        <p><strong>Symbol:</strong> ${data.symbol.toUpperCase()}</p>
+        <p><strong>All-Time High:</strong> $${ath.toLocaleString()}</p>
+        <p><strong>All-Time Low:</strong> $${atl.toLocaleString()}</p>
+      `;
+    } catch (error) {
+      output.innerHTML = '<p style="color: #f87171">Error fetching data. Try a valid symbol like BTC or ETH.</p>';
+    }
+  }
+</script>
+    </body>
+</html>
+ 
