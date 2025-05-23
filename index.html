@@ -1,157 +1,224 @@
- <!DOCTYPE html><html lang="en">
+ <!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Crypto High/Low Tracker</title>
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    }body {
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-}
-
-.container {
-  background: #ffffff10;
-  backdrop-filter: blur(10px);
-  border-radius: 20px;
-  padding: 30px;
-  max-width: 400px;
-  width: 100%;
-  color: #fff;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-  text-align: center;
-  animation: slideIn 1s ease-in-out;
-}
-
-@keyframes slideIn {
-  from {
-    transform: translateY(-50px);
-    opacity: 0;
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Powerful Interactive Dashboard</title>
+<style>
+  
+  * {
+    box-sizing: border-box;
   }
-  to {
-    transform: translateY(0);
-    opacity: 1;
+  body {
+    margin: 0; padding: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: #121212;
+    color: #eee;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    transition: background 0.3s, color 0.3s;
   }
-}
-
-h1 {
-  margin-bottom: 20px;
-  font-size: 1.8em;
-}
-
-input, button {
-  padding: 10px;
-  border-radius: 8px;
-  border: none;
-  font-size: 1em;
-  margin: 5px 0;
-  width: 100%;
-  transition: all 0.3s ease;
-}
-
-input {
-  background: #ffffff15;
-  color: #fff;
-}
-
-input::placeholder {
-  color: #ccc;
-}
-
-button {
-  background: #4ade80;
-  color: #000;
-  cursor: pointer;
-}
-
-button:hover {
-  background: #22c55e;
-}
-
-.result {
-  margin-top: 20px;
-  text-align: left;
-  background: #00000030;
-  padding: 15px;
-  border-radius: 12px;
-  animation: fadeIn 0.8s ease-in-out;
-}
-
-@keyframes fadeIn {
-  from {
-    opacity: 0;
+  header {
+    padding: 1.5rem 2rem;
+    background: linear-gradient(90deg, #4b6cb7, #182848);
+    text-align: center;
+    font-weight: 900;
+    font-size: 2.4rem;
+    user-select: none;
+    letter-spacing: 2px;
   }
-  to {
-    opacity: 1;
+  main {
+    flex: 1;
+    padding: 2rem 1rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    width: 100%;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 2rem;
   }
-}
-
-.result p {
-  margin: 8px 0;
-}
-
-@media (max-width: 480px) {
-  h1 {
-    font-size: 1.5em;
+  .card {
+    background: #1e1e2f;
+    border-radius: 12px;
+    padding: 1.75rem 2rem;
+    box-shadow: 0 0 15px rgba(75, 108, 183, 0.4);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    transition: transform 0.3s ease;
+    cursor: default;
   }
-}
-
-  </style>
+  .card:hover {
+    transform: scale(1.05);
+  }
+  .stat-value {
+    font-size: 3.2rem;
+    font-weight: 700;
+    color: #4b6cb7;
+    margin-bottom: 0.4rem;
+  }
+  .stat-label {
+    font-size: 1.1rem;
+    color: #9a9a9a;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+  }
+  .chart-container {
+    grid-column: 1 / -1;
+    background: #1e1e2f;
+    border-radius: 12px;
+    padding: 1rem 1.5rem;
+    box-shadow: 0 0 20px rgba(75, 108, 183, 0.4);
+  }
+  svg {
+    width: 100%;
+    max-height: 350px;
+  }
+  .dark-mode-toggle {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #4b6cb7;
+    border: none;
+    color: white;
+    padding: 0.5rem 0.9rem;
+    font-weight: 700;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 0 10px #4b6cb7aa;
+    transition: background 0.3s ease;
+    user-select: none;
+  }
+  .dark-mode-toggle:hover {
+    background: #3761a8;
+  }
+  /* Light mode styles */
+  body.light {
+    background: #f4f7fb;
+    color: #222;
+  }
+  body.light header {
+    background: linear-gradient(90deg, #89f7fe, #66a6ff);
+    color: #222;
+  }
+  body.light .card {
+    background: #ffffff;
+    box-shadow: 0 0 20px #66a6ff44;
+    color: #222;
+  }
+  body.light .stat-value {
+    color: #66a6ff;
+  }
+  body.light .stat-label {
+    color: #555;
+  }
+  body.light .chart-container {
+    background: #ffffff;
+    box-shadow: 0 0 25px #66a6ff44;
+  }
+  body.light .dark-mode-toggle {
+    background: #66a6ff;
+    color: white;
+    box-shadow: 0 0 10px #66a6ffaa;
+  }
+  body.light .dark-mode-toggle:hover {
+    background: #3a87ff;
+  }
+</style>
 </head>
 <body>
-  <div class="container">
-    <h1>Crypto High/Low Tracker</h1>
-    <input type="text" id="cryptoInput" placeholder="Enter crypto symbol (e.g. BTC)" />
-    <button onclick="fetchCryptoData()">Get Info</button>
-    <div id="output" class="result"></div>
+<header>Powerful Interactive Dashboard</header>
+<button class="dark-mode-toggle" aria-label="Toggle dark/light mode">Light Mode</button>
+<main>
+  <div class="card">
+    <div class="stat-value" id="users-count">0</div>
+    <div class="stat-label">Active Users</div>
   </div>
-  <script>
-  async function fetchCryptoData() {
-    const symbol = document.getElementById('cryptoInput').value.trim().toLowerCase();
-    const output = document.getElementById('output');
-    if (!symbol) {
-      output.innerHTML = '<p>Please enter a cryptocurrency symbol.</p>';
-      return;
-    }
+  <div class="card">
+    <div class="stat-value" id="sales-count">0</div>
+    <div class="stat-label">Monthly Sales</div>
+  </div>
+  <div class="card">
+    <div class="stat-value" id="revenue-count">$0</div>
+    <div class="stat-label">Revenue</div>
+  </div>
+  <div class="card">
+    <div class="stat-value" id="feedback-count">0</div>
+    <div class="stat-label">Feedbacks</div>
+  </div>
+  <div class="chart-container">
+    <svg viewBox="0 0 500 300" aria-label="Sales over last 6 months">
+      <polyline fill="none" stroke="#4b6cb7" stroke-width="5" points="" />
+      <text x="20" y="20" fill="#4b6cb7" font-weight="700" font-size="14px">Sales in last 6 months</text>
+    </svg>
+  </div>
+</main>
+<script>
+  const usersCountEl = document.getElementById('users-count');
+  const salesCountEl = document.getElementById('sales-count');
+  const revenueCountEl = document.getElementById('revenue-count');
+  const feedbackCountEl = document.getElementById('feedback-count');
 
-    output.innerHTML = '<p>Loading...</p>';
-
-    try {
-      // Step 1: Get all coins list
-      const listResponse = await fetch('https://api.coingecko.com/api/v3/coins/list');
-      const coins = await listResponse.json();
-
-      // Step 2: Find the coin by symbol
-      const coin = coins.find(c => c.symbol === symbol);
-
-      if (!coin) throw new Error('Symbol not found.');
-
-      // Step 3: Fetch data using the coin ID
-      const dataResponse = await fetch(`https://api.coingecko.com/api/v3/coins/${coin.id}`);
-      const data = await dataResponse.json();
-
-      const ath = data.market_data.ath.usd;
-      const atl = data.market_data.atl.usd;
-
-      output.innerHTML = `
-        <p><strong>Name:</strong> ${data.name}</p>
-        <p><strong>Symbol:</strong> ${data.symbol.toUpperCase()}</p>
-        <p><strong>All-Time High:</strong> $${ath.toLocaleString()}</p>
-        <p><strong>All-Time Low:</strong> $${atl.toLocaleString()}</p>
-      `;
-    } catch (error) {
-      output.innerHTML = '<p style="color: #f87171">Error fetching data. Try a valid symbol like BTC or ETH.</p>';
-    }
+  function animateCount(element, start, end, prefix = '', duration = 2000) {
+    let startTimestamp = null;
+    const step = (timestamp) => {
+      if (!startTimestamp) startTimestamp = timestamp;
+      const progress = Math.min((timestamp - startTimestamp) / duration, 1);
+      const value = Math.floor(progress * (end - start) + start);
+      element.textContent = prefix + value.toLocaleString();
+      if (progress < 1) {
+        window.requestAnimationFrame(step);
+      }
+    };
+    window.requestAnimationFrame(step);
   }
+
+  animateCount(usersCountEl, 0, 15432, '', 2500);
+  animateCount(salesCountEl, 0, 8432, '', 2500);
+  animateCount(revenueCountEl, 0, 382145, '$', 2500);
+  animateCount(feedbackCountEl, 0, 2371, '', 2500);
+
+  
+  const svg = document.querySelector('svg polyline');
+  const salesData = [700, 850, 900, 1100, 1250, 1450];
+  const svgWidth = 500;
+  const svgHeight = 300;
+  const paddingLeft = 50;
+  const paddingBottom = 50;
+
+  function pointsForData(data) {
+    const max = Math.max(...data);
+    const min = Math.min(...data);
+    const range = max - min || 1;
+    const stepX = (svgWidth - paddingLeft - 50) / (data.length - 1);
+    let points = '';
+    data.forEach((value, i) => {
+      // Normalize Y values to fit into svg height
+      let x = paddingLeft + i * stepX;
+      let y = svgHeight - ((value - min) / range) * (svgHeight - paddingBottom - 40) - paddingBottom;
+      points += `${x},${y} `;
+    });
+    return points.trim();
+  }
+
+  svg.setAttribute('points', pointsForData(salesData));
+
+  
+  const toggleBtn = document.querySelector('.dark-mode-toggle');
+  toggleBtn.addEventListener('click', () => {
+    document.body.classList.toggle('light');
+    if (document.body.classList.contains('light')) {
+      toggleBtn.textContent = 'Dark Mode';
+      toggleBtn.setAttribute('aria-label', 'Toggle dark mode');
+    } else {
+      toggleBtn.textContent = 'Light Mode';
+      toggleBtn.setAttribute('aria-label', 'Toggle light mode');
+    }
+  });
 </script>
-    </body>
+</body>
 </html>
+
  
